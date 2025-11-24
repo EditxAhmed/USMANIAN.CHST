@@ -1,0 +1,7 @@
+{
+  "name": "USMANIAN.AI",
+  "description": "A sleek, high-performance intelligent assistant powered by Google Gemini 2.5 Flash. Features real-time streaming responses, code syntax highlighting, and a modern dark-mode aesthetic.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
