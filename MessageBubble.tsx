@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React from 'react';
 import { Message, Role } from '../types';
 import { UserIcon, BotIcon } from './Icons';
 
@@ -6,33 +6,8 @@ interface MessageBubbleProps {
   message: Message;
 }
 
-// Helper to render text with clickable links
-const renderWithLinks = (text: string) => {
-  // Regex to find URLs (http/https)
-  const urlRegex = /(https?:\/\/[^\s]+)/g;
-  const parts = text.split(urlRegex);
-
-  return parts.map((part, i) => {
-    if (part.match(urlRegex)) {
-      return (
-        <a 
-          key={i} 
-          href={part} 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          className="text-blue-400 hover:underline break-all font-medium"
-        >
-          {part}
-        </a>
-      );
-    }
-    return part;
-  });
-};
-
-// Simple formatter to handle code blocks, basic paragraphs, and links
-// Memoized to prevent re-parsing large texts on every render
-const FormattedText: React.FC<{ text: string }> = memo(({ text }) => {
+// Simple formatter to handle code blocks and basic paragraphs without a heavy markdown library
+const FormattedText: React.FC<{ text: string }> = ({ text }) => {
   if (!text) return null;
 
   // Split by code blocks
@@ -45,8 +20,8 @@ const FormattedText: React.FC<{ text: string }> = memo(({ text }) => {
           // It's a code block
           const content = part.slice(3, -3).replace(/^[a-z]+\n/, ''); // Try to strip language line
           return (
-            <div key={index} className="my-4 overflow-hidden rounded-lg bg-slate-950 border border-slate-800 shadow-sm">
-              <div className="px-4 py-2 bg-slate-900 border-b border-slate-800 text-xs text-slate-400 font-mono flex justify-between items-center">
+            <div key={index} className="my-4 overflow-hidden rounded-lg bg-slate-800 border border-slate-700 shadow-sm">
+              <div className="px-4 py-2 bg-slate-900 border-b border-slate-700 text-xs text-slate-400 font-mono flex justify-between items-center">
                 <span>Code</span>
               </div>
               <div className="p-4 overflow-x-auto">
@@ -69,10 +44,9 @@ const FormattedText: React.FC<{ text: string }> = memo(({ text }) => {
                     <p key={pIndex} className="mb-2 last:mb-0 leading-relaxed">
                         {boldParts.map((b, bIdx) => {
                             if (b.startsWith('**') && b.endsWith('**')) {
-                                return <strong key={bIdx} className="font-semibold text-red-400">{b.slice(2, -2)}</strong>;
+                                return <strong key={bIdx} className="font-semibold text-red-700">{b.slice(2, -2)}</strong>;
                             }
-                            // Render normal text with link detection
-                            return <span key={bIdx}>{renderWithLinks(b)}</span>;
+                            return <span key={bIdx}>{b}</span>;
                         })}
                     </p>
                 )
@@ -83,19 +57,19 @@ const FormattedText: React.FC<{ text: string }> = memo(({ text }) => {
       })}
     </>
   );
-});
+};
 
-const MessageBubble: React.FC<MessageBubbleProps> = memo(({ message }) => {
+const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
   const isUser = message.role === Role.USER;
 
   return (
-    <div className={`flex w-full mb-6 ${isUser ? 'justify-end' : 'justify-start'} animate-fade-in`}>
+    <div className={`flex w-full mb-6 ${isUser ? 'justify-end' : 'justify-start'}`}>
       <div className={`flex max-w-[85%] md:max-w-[75%] ${isUser ? 'flex-row-reverse' : 'flex-row'} gap-3`}>
         
         {/* Avatar */}
         <div className={`
           flex-shrink-0 h-8 w-8 rounded-full flex items-center justify-center shadow-sm
-          ${isUser ? 'bg-red-600 text-white' : 'bg-slate-800 text-red-500 border border-slate-700'}
+          ${isUser ? 'bg-red-600 text-white' : 'bg-red-50 text-red-600 border border-red-100'}
         `}>
           {isUser ? <UserIcon className="w-5 h-5" /> : <BotIcon className="w-5 h-5" />}
         </div>
@@ -106,15 +80,15 @@ const MessageBubble: React.FC<MessageBubbleProps> = memo(({ message }) => {
           ${isUser ? 'items-end' : 'items-start'}
         `}>
           <div className={`
-            relative px-5 py-3.5 rounded-2xl shadow-lg text-sm md:text-base transition-all duration-200 border
+            relative px-5 py-3.5 rounded-2xl shadow-sm text-sm md:text-base
             ${isUser 
-              ? 'bg-red-600 text-white border-red-500 rounded-tr-sm shadow-red-900/20' 
-              : 'bg-slate-800/80 backdrop-blur-sm text-slate-200 border-slate-700 rounded-tl-sm'
+              ? 'bg-red-600 text-white rounded-tr-sm shadow-red-200' 
+              : 'bg-white text-slate-800 border border-slate-200 rounded-tl-sm'
             }
-            ${message.error ? 'border-red-500/50 bg-red-900/20 text-red-200' : ''}
+            ${message.error ? 'border-red-500 bg-red-50 text-red-800' : ''}
           `}>
              {message.image && (
-               <div className="mb-3 overflow-hidden rounded-lg border border-slate-700">
+               <div className="mb-3 overflow-hidden rounded-lg border border-slate-200">
                  <img src={message.image} alt="Generated Content" className="w-full h-auto object-cover max-h-[512px]" />
                </div>
              )}
@@ -122,18 +96,18 @@ const MessageBubble: React.FC<MessageBubbleProps> = memo(({ message }) => {
              <FormattedText text={message.text} />
              
              {message.isStreaming && (
-                <span className="inline-block w-1.5 h-4 ml-1 -mb-0.5 bg-red-500 animate-pulse" />
+                <span className="inline-block w-1.5 h-4 ml-1 -mb-0.5 bg-red-400 animate-pulse" />
              )}
           </div>
           
           {/* Role Label */}
-          <span className="text-xs text-slate-500 mt-1 px-1 select-none">
+          <span className="text-xs text-slate-400 mt-1 px-1">
             {isUser ? 'You' : 'USMANIAN.CHAT'}
           </span>
         </div>
       </div>
     </div>
   );
-});
+};
 
 export default MessageBubble;

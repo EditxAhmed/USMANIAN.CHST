@@ -7,7 +7,6 @@ const ai = new GoogleGenAI({ apiKey });
 
 export class GeminiService {
   private chatSession: Chat | null = null;
-  private abortController: AbortController | null = null;
 
   constructor() {
     // Only start session if key is valid (basic check)
@@ -32,18 +31,6 @@ OFFICIAL ONLINE PRESENCE:
 - Website: https://usman.edu.pk
 - Facebook: https://www.facebook.com/UsmanPublicSchoolSystem/
 
-LEADERSHIP & SENIOR MANAGEMENT (CRITICAL ACCURACY):
-- Executive Director: Syed Moinuddin Nayyar. (Note: He is the Executive Director, NOT a Deputy Director. If asked about "Moinuddin Nattyar", correct it as a misspelling of Syed Moinuddin Nayyar).
-- Founder: Mr. Usman Ahmed.
-- Campus 9 Principal: Sir Ali Hussain.
-- Best Computer Science Coordinator: Sir Ghufran Kamal Uddin.
-
-DEPUTY DIRECTORS:
-- Deputy Director Academics: Ahmed Samad Khan.
-- Deputy Director IT: Shakirullah Sherzada.
-- Deputy Director Finance: Syed Inayat Ullah.
-- Deputy Director Research & Development (R&D): Lubaina Shahid.
-
 CAMPUS DETAILS:
 - Campus 1: St 28, Sector 11-A, North Karachi (Girls only, Classes IV to XII).
 - Campus 2: St 60, Sector 11-A, North Karachi (Boys only, Classes VI to XII).
@@ -53,37 +40,18 @@ CAMPUS DETAILS:
 - Campus 6: C‑26, Block J, North Nazimabad (Girls only, Classes VI to X).
 - Campus 7: B‑329, Block‑13, F.B Area (Pre‑Nursery to Class II, Co-ed).
 - Campus 8: H‑193, Block 2, P.E.C.H.S. (Girls only, Classes III to X & O-Level).
-- Campus 9: Plot ST‑5, Block‑5, Federal B Area (Boys only, Classes VI to X). Principal: Sir Ali Hussain.
+- Campus 9: Plot ST‑5, Block‑5, Federal B Area (Boys only, Classes VI to X).
 - Campus 10: C‑18, Block 1‑A, Gulistan‑e‑Johar (Pre‑Nursery to Class II, Co-ed).
 
-CORE VALUES & IDENTITY:
+LEADERSHIP & VALUES:
+- Founder: Mr. Usman Ahmed.
+- Best Computer Science Coordinator: Sir Ghufran Kamal Uddin.
 - Core Values: Integrity, Excellence, Innovation, Discipline, Teamwork.
 - Vision: To provide quality education and create future leaders.
-- Mission: To nurture knowledge, skills, and values for academic and personal growth.
-
-COMMON USER QUERIES:
-- If asked "Who is the principal of Campus 9?", answer: "Sir Ali Hussain".
-- If asked about "Moinuddin Nayyar", identify him as the Executive Director.
-- "Usman Public School System kab bana tha?" (When was it founded?)
-- "Admission kab start hotay hain?"
-- "Fee structure kya hai?" (Refer to official website).
-
-If you do not have specific data for things like current year fees, kindly suggest the user visit the official website (https://usman.edu.pk).`,
+- Mission: To nurture knowledge, skills, and values for academic and personal growth.`,
         temperature: 0.7,
       },
     });
-  }
-
-  public resetSession() {
-    this.stopGeneration();
-    this.startNewSession();
-  }
-
-  public stopGeneration() {
-    if (this.abortController) {
-      this.abortController.abort();
-      this.abortController = null;
-    }
   }
 
   public async sendMessageStream(
@@ -94,34 +62,18 @@ If you do not have specific data for things like current year fees, kindly sugge
       this.startNewSession();
     }
 
-    // Cancel any previous stream
-    this.stopGeneration();
-    this.abortController = new AbortController();
-    const signal = this.abortController.signal;
-
     try {
       const resultStream = await this.chatSession!.sendMessageStream({ message });
       
       for await (const chunk of resultStream) {
-        if (signal.aborted) {
-            break;
-        }
         const responseChunk = chunk as GenerateContentResponse;
         if (responseChunk.text) {
             onChunk(responseChunk.text);
         }
       }
     } catch (error) {
-      // If aborted, just silently return or log debug info
-      if (signal.aborted) {
-          return;
-      }
       console.error("Error in stream:", error);
       throw error;
-    } finally {
-        if (this.abortController?.signal === signal) {
-            this.abortController = null;
-        }
     }
   }
 

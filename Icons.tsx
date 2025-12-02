@@ -16,37 +16,6 @@ export const SendIcon: React.FC<{ className?: string }> = ({ className }) => (
   </svg>
 );
 
-export const PlusIcon: React.FC<{ className?: string }> = ({ className }) => (
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
-    strokeLinejoin="round" 
-    className={className}
-  >
-    <line x1="12" y1="5" x2="12" y2="19"></line>
-    <line x1="5" y1="12" x2="19" y2="12"></line>
-  </svg>
-);
-
-export const MessageIcon: React.FC<{ className?: string }> = ({ className }) => (
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
-    strokeLinejoin="round" 
-    className={className}
-  >
-    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-  </svg>
-);
-
 export const SparklesIcon: React.FC<{ className?: string }> = ({ className }) => (
   <svg 
     xmlns="http://www.w3.org/2000/svg" 
@@ -79,58 +48,6 @@ export const InfoIcon: React.FC<{ className?: string }> = ({ className }) => (
   </svg>
 );
 
-export const HistoryIcon: React.FC<{ className?: string }> = ({ className }) => (
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
-    strokeLinejoin="round" 
-    className={className}
-  >
-    <path d="M12 8v4l3 3"></path>
-    <circle cx="12" cy="12" r="9"></circle>
-    <path d="M3.05 11a9 9 0 1 1 .5 4"></path>
-    <path d="M3.05 11l-1 2"></path>
-    <path d="M3.05 11l2 2"></path>
-  </svg>
-);
-
-export const PaintBrushIcon: React.FC<{ className?: string }> = ({ className }) => (
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
-    strokeLinejoin="round" 
-    className={className}
-  >
-    <path d="M18.375 2.625a3.875 3.875 0 0 0-5.48 0l-9 9a2.75 2.75 0 0 0 0 3.89L8.25 19.875a2.75 2.75 0 0 0 3.89 0l9-9a3.875 3.875 0 0 0 0-5.48Z"></path>
-    <path d="m9 11 3 3"></path>
-    <path d="M8 16a4 4 0 0 0-4 4"></path>
-  </svg>
-);
-
-export const CodeIcon: React.FC<{ className?: string }> = ({ className }) => (
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
-    strokeLinejoin="round" 
-    className={className}
-  >
-    <polyline points="16 18 22 12 16 6"></polyline>
-    <polyline points="8 6 2 12 8 18"></polyline>
-  </svg>
-);
-
 export const SchoolLogo: React.FC<{ className?: string }> = ({ className }) => {
   const uniqueId = useId();
   const pathId = `textArc-${uniqueId.replace(/:/g, '')}`;
@@ -143,35 +60,58 @@ export const SchoolLogo: React.FC<{ className?: string }> = ({ className }) => {
       fill="none"
     >
       <defs>
+        {/* Arc path for text - curved over the top */}
         <path id={pathId} d="M 75,300 A 175,175 0 0 1 425,300" />
       </defs>
+
+      {/* --- RING ARC --- */}
       <path d="M 75,300 A 175,175 0 1 1 425,300" stroke="#0072CE" strokeWidth="55" fill="none" strokeLinecap="round" />
+
+      {/* Text on Arc */}
       <text fill="white" fontSize="26" fontWeight="bold" fontFamily="Arial, Helvetica, sans-serif" letterSpacing="0.5">
         <textPath href={`#${pathId}`} startOffset="50%" textAnchor="middle" dominantBaseline="middle">
           USMAN PUBLIC SCHOOL SYSTEM
         </textPath>
       </text>
+
+      {/* --- CENTER ELEMENT --- */}
       <g transform="translate(250, 250)">
+        
+        {/* Torch/Pen Nib */}
         <g transform="translate(0, -60)">
            <path d="M -18,0 L 18,0 L 12,45 L 0,60 L -12,45 Z" fill="#9CA3AF" />
            <path d="M 0,60 L 0,0" stroke="white" strokeWidth="1.5" />
+           {/* Flame */}
            <path d="M 0,-5 Q 15,-30 0,-65 Q -15,-30 0,-5" fill="#F59E0B" />
            <path d="M 0,-15 Q 6,-30 0,-45 Q -6,-30 0,-15" fill="#FDE047" />
         </g>
+
+        {/* Book */}
         <g transform="translate(0, 20)">
            <path d="M 0,0 Q 40,-15 80,10 V 60 Q 40,35 0,50 Q -40,35 -80,60 V 10 Q -40,-15 0,0" fill="#E5E7EB" stroke="#6B7280" strokeWidth="2" />
            <path d="M 0,0 V 50" stroke="#6B7280" strokeWidth="2" />
+           {/* Script Lines */}
            <path d="M 10,15 Q 40,5 70,20 M 15,25 Q 40,15 65,30 M 10,35 Q 40,25 70,40" stroke="#9CA3AF" strokeWidth="2" fill="none" opacity="0.7"/>
            <path d="M -10,15 Q -40,5 -70,20 M -15,25 Q -40,15 -65,30 M -10,35 Q -40,25 -70,40" stroke="#9CA3AF" strokeWidth="2" fill="none" opacity="0.7"/>
+           {/* Arabic char simulation */}
            <path d="M 20,20 L 22,18 M 50,30 L 52,28" stroke="#6B7280" strokeWidth="2" />
         </g>
       </g>
+
+      {/* --- RIBBON WINGS --- */}
       <path d="M 30,320 Q 100,280 250,340 Q 400,280 470,320 Q 450,400 250,370 Q 50,400 30,320 Z" fill="#DC2626" />
+
+      {/* --- BOTTOM TYPOGRAPHY --- */}
       <text x="250" y="460" textAnchor="middle" fill="#0072CE" fontSize="75" fontWeight="900" fontFamily="Arial Black, sans-serif">UPSS</text>
+      
+      {/* Red Underline */}
       <path d="M 120,480 Q 250,485 380,480" stroke="#DC2626" strokeWidth="4" strokeLinecap="round" fill="none"/>
+
+      {/* Tagline */}
       <text x="250" y="525" textAnchor="middle" fill="#0072CE" fontSize="30" fontFamily="'Brush Script MT', cursive" fontStyle="italic">
         Shaping the leaders of Ummah
       </text>
+
     </svg>
   );
 };
